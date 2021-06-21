@@ -1,0 +1,23 @@
+{
+  "name": "cross-pwgame-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nath-btx/cross-pwgame-back.git"
+  },
+  "author": "Yousseif ISSULAHI, Valentin DOFAL, Nathan BERTIAUX",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nath-btx/cross-pwgame-back/issues"
+  },
+  "homepage": "https://github.com/nath-btx/cross-pwgame-back#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.1.2"
+  }
+}
