@@ -29,6 +29,9 @@ server.listen(process.env.PORT ||3001, () => {
 io.on('connection', (socket: any) => {
   console.log('client connected')          //Listening for any new connections
   socket.on('number', (msg: any)  => {     //Listening for any new number submitted by user
+    if(!scoreBoard[msg.username]){
+      scoreBoard[msg.username] = 0
+    }
     if(dateStart.getTime() == new Date(0).getTime()){ //Get date to register in game.json
       dateStart = new Date(Date.now())
     }
@@ -37,18 +40,12 @@ io.on('connection', (socket: any) => {
         scoreBoard[msg.username] ++
         io.sockets.emit('gameOver',{scoreBoard: scoreBoard, username:msg.username}) //We send info to clients that game is over and with the score board
         //Add save to json FILE of game state
-        scoreBoardToJSON(scoreBoard, dateStart , new Date(Date.now()),'magicNumber')
+        // scoreBoardToJSON(scoreBoard, dateStart , new Date(Date.now()),'magicNumber') // need to fix nodemon
         scoreBoard = {}
       }
-      else{
-        if(scoreBoard[msg.username]){  //Enter user in scoreboard   Then we send the info someone won to the clients      
-          scoreBoard[msg.username] ++
-        }
-        else{                                //Increment user's score
-          scoreBoard[msg.username] = 1
-        }
-        
-        io.sockets.emit('victory',{username: msg.username, number:MagicNumber, scoreBoard:scoreBoard})
+      else{    
+          scoreBoard[msg.username] ++        
+          io.sockets.emit('victory',{username: msg.username, number:MagicNumber, scoreBoard:scoreBoard})
       }
       MagicNumber = createMagicNumber()
       console.log(MagicNumber)
