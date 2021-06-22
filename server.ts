@@ -1,5 +1,3 @@
-// rest of the code remains same
-import { createECDH } from "crypto";
 import { Response, Request } from "express";
 require('dotenv').config()
 import scoreBoardToJSON from './scoreBoard'
