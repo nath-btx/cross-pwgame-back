@@ -165,4 +165,4 @@ io.on('connection', (socket: any) => {
       sendWord()
     }    
   })
-});
+}); 
