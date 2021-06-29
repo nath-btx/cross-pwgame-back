@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start": "node server.ts",
+    "start": "nodemon server.ts --ignore 'games.json'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "nodemonConfig": {
