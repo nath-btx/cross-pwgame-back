@@ -5,4 +5,5 @@ If you want to run it locally, just
 * Clone the project
 * Install dependencies with npm install
 * Start the server with npm start
+
 Once your server is running, you can connect a client : https://github.com/nath-btx/cross-pwgame-front
