@@ -76,6 +76,7 @@ function timer():void{ //Executes 42 seconds after game start, should end game
   else{
     io.sockets.emit('timerOver',{scoreboard: inGameScoreboard, username:winner})
   }
+  randomKey = createKey()
   inGameScoreboard={}
 
 }
