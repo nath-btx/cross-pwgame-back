@@ -44,12 +44,66 @@ function sendWord():void{
   io.sockets.emit('wordToType', {randomWord:randomWord})
 }
 
+//WORD AND FURIOUS PART
+let randomKey = createKey()
+let keyScoreBoard: {[key:string]:number}={ }
+let inGameScoreboard : {[key:string]:number}={ }
+let keyDate: Date = new Date(0)
 
+
+function createKey():String{
+  return String.fromCharCode(Math.floor(Math.random()*26) + 97)
+}
+function sendKey(): void{
+  io.sockets.emit('keyToSpam',{key:randomKey})
+}
+
+function timer():void{ //Executes 42 seconds after game start, should end game
+  let arr = Object.values(inGameScoreboard)
+  let max = Math.max(...arr)
+  let winner:any = (Object.keys(inGameScoreboard).find(key => inGameScoreboard[key] === max))
+
+
+  if(!keyScoreBoard[winner]){
+    keyScoreBoard[winner] = 0
+  }
+  keyScoreBoard[winner] ++
+  if(keyScoreBoard[winner] == 3){
+    io.sockets.emit('keyOver',{scoreboard: inGameScoreboard, username:winner})
+    scoreBoardToJSON(keyScoreBoard, keyDate, new Date(Date.now()), 'WordAndFurious')
+    keyScoreBoard ={}
+  }
+  else{
+    io.sockets.emit('timerOver',{scoreboard: inGameScoreboard, username:winner})
+  }
+  inGameScoreboard={}
+
+}
 
 
 io.on('connection', (socket: any) => {
-  console.log('client connected')          //Listening for any new connections
 
+
+  console.log('client connected')          //Listening for any new connections
+  socket.on('newClient',(Client:any) => {
+    sendKey()
+  })
+  socket.on('key', (msg:any) => {         //Listening for keys sent
+    if(keyDate.getTime() == new Date(0).getTime()){ //Get date to register in game.json
+      keyDate = new Date(Date.now())
+    }
+    console.log(`user ${msg.username} typed key ${msg.key} expected ${randomKey}`)
+    if(!inGameScoreboard[msg.username]){
+      if(Object.keys(inGameScoreboard).length === 0){
+        console.log('timer started')
+        setTimeout(timer,1000)
+      }
+      inGameScoreboard[msg.username] = 0
+    }
+    if(msg.key == randomKey){
+      inGameScoreboard[msg.username]++
+    }
+  })
 
   // MAGIC NUMBER PART 
   socket.on('number', (msg: any)  => {     //Listening for any new number submitted by user
@@ -78,7 +132,7 @@ io.on('connection', (socket: any) => {
 
 
 
-
+// QUICK WORD 
   socket.on('newPlayer',(player:any) => { // Send the word to the player that connected
     if(Object.keys(wordScoreBoard).length === 0){
       randomWord = createWord()
@@ -99,7 +153,7 @@ io.on('connection', (socket: any) => {
         wordScoreBoard[msg.username]++
         console.log(wordScoreBoard)
         io.sockets.emit('wordgameover',{scoreBoard: wordScoreBoard, username: msg.username})
-        scoreBoardToJSON(wordScoreBoard, wordDate, new Date(Date.now()),'word')
+        scoreBoardToJSON(wordScoreBoard, wordDate, new Date(Date.now()),'QuickWord')
         wordScoreBoard = {}
       }
       else{
